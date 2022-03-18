@@ -11,6 +11,7 @@
 
 #define MAX(X, Y) ((X > Y) ? X : Y)
 #define DBG
+#define TESTE
 
 // pesos para os termos da FO
 const int peso_vei = 10;
@@ -28,18 +29,16 @@ const int peso_vio_tem_esp = 100;
 
 using namespace std;
 
-/*
-   instancia
-   local de saida -> ""(Para imprimir na tela), nome do arquivo
-*/
+//seed instancia tempo_limite saida taxa_resfriamento sa_max temp_inicial temp_final
+//1 instancias/darp3.txt 10 resultados/saida.txt 0.09 2 1000 0.01
 
 int main(int argc, char *argv[])
 {
    //---
    // parametros do executavel
-   int seed = 4;
+   int seed = 1;
    string instancia = "instancias/darp3.txt";
-   double tempo_limite = 30;
+   double tempo_limite = 10;
    string saida = "resultados/saida.txt";
    // SA
    double alfa = 0.975;
@@ -70,6 +69,11 @@ int main(int argc, char *argv[])
    string aux = "SA";
 
    simulated_annealing(alfa, sa_max * (numReq * (numVei + 1)), t_0, t_c, tempo_limite, sol, tempo_melhor, tempo_total);
+
+   //---
+   //escrevendo variaveis para o trabalho
+   printf("%-16s%.2f\n","Tempo Melhor: ",tempo_melhor);
+   printf("%-16s%.2f\n","Tempo Total: ",tempo_total);
 
    //---
    // Escrever a solução
@@ -684,7 +688,6 @@ void gerarVizinho(solucao &s, int num)
          {
             if (s.matAteVei[i][j] == requisicao)
             {
-               // 1 2
                for (k = j; k < s.vetQtdLocAte[i] - 1; k++)
                {
                   s.matAteVei[i][k] = s.matAteVei[i][k + 1];
@@ -702,7 +705,7 @@ void gerarVizinho(solucao &s, int num)
                      }
                      s.matAteVei[i][k] = 0;
                      s.vetQtdLocAte[i]--;
-                     break;
+                     goto CONTINUE;
                   }
                   if (j + 1 == s.vetQtdLocAte[i])
                   {
@@ -712,7 +715,7 @@ void gerarVizinho(solucao &s, int num)
             }
          }
       }
-
+      CONTINUE:
       // adicionando um local no carro que vai receber a requisição
       /*
          Como o primeiro sortei é para o embarque, o mesmo não pode entra na ultima possição
@@ -807,7 +810,7 @@ void gerarVizinho(solucao &s, int num)
       */
       for (int j = 0; j < numVei; j++)
       { // veiculos
-         for (int k = 0; k <= s.vetQtdLocAte[j]; k++)
+         for (int k = 0; k < s.vetQtdLocAte[j]; k++)
          { // locais
             if (s.matAteVei[j][k] == aux1)
             {
