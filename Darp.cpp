@@ -10,6 +10,7 @@
 #include "darp.hpp"
 
 #define MAX(X, Y) ((X > Y) ? X : Y)
+#define DBG
 
 // pesos para os termos da FO
 const int peso_vei = 10;
@@ -29,41 +30,54 @@ using namespace std;
 
 /*
    instancia
-   local de saida -> "", nome do arquivo
+   local de saida -> ""(Para imprimir na tela), nome do arquivo
 */
-// 0 1 2
+
 int main(int argc, char *argv[])
 {
-   solucao sol;
-   string saida;
-   string aux(argv[1]);
+   //---
+   // parametros do executavel
+   int seed = 4;
+   string instancia = "instancias/darp3.txt";
+   double tempo_limite = 30;
+   string saida = "resultados/saida.txt";
+   // SA
+   double alfa = 0.975;
+   int sa_max = 2;
+   double t_0 = 1000;
+   double t_c = 0.01;
 
-   string instancia = "instancias/";
-   instancia += aux;
-
-   // "" para mostrar na tela
-   if(argc < 2){
-      saida = "";
-   }else{
-      aux = string(argv[2]);
-      saida = "resultados/";
-      saida += aux;
+   if (argc > 1)
+   {
+      seed = stoi(argv[1]);
+      instancia = argv[2];
+      tempo_limite = stof(argv[3]);
+      saida = argv[4];
+      alfa = stof(argv[5]);
+      sa_max = stoi(argv[6]);
+      t_0 = stof(argv[7]);
+      t_c = stof(argv[8]);
    }
-    
-   lerDados(instancia);
-   // testarDados("");
-   ordenarLocais();
-   // for (int i = 0; i < numLoc - 2; i++)
-   //    printf("%d\n", vetLocOrd[i]);
-   heuConGul(sol);
-   calcFO(sol);
 
-   simulatedAnnealing(0.005, 1000, 1000, 0.05, sol);
-   calcFO(sol);
+   //---
+   srand(seed);
+
+   lerDados(instancia);
+   ordenarLocais();
+
+   solucao sol;
+   double tempo_melhor, tempo_total;
+   string aux = "SA";
+
+   simulated_annealing(alfa, sa_max * (numReq * (numVei + 1)), t_0, t_c, tempo_limite, sol, tempo_melhor, tempo_total);
+
+   //---
+   // Escrever a solução
    escArquivo(sol, saida);
    escProblema(saida);
    escSolucao(sol, saida);
-   return 0;
+
+   return EXIT_SUCCESS;
 }
 
 void calcFO(solucao &s)
@@ -429,29 +443,7 @@ void lerDados(string arq)
    fclose(f);
 }
 
-void ordena(int *vectorToSort, int *timeVector, int size)
-{
-   int i, j, lowerValue;
-   for (i = 0; i < size; i++)
-   {
-      lowerValue = i;
-      for (j = i + 1; j < size; j++)
-      {
-         if (timeVector[vectorToSort[lowerValue]] > timeVector[vectorToSort[j]])
-         {
-            lowerValue = j;
-         }
-      }
-      if (lowerValue != i)
-      {
-         j = vectorToSort[i];
-         vectorToSort[i] = vectorToSort[lowerValue];
-         vectorToSort[lowerValue] = j;
-      }
-   }
-}
-
-void mudar(solucao &s, int aux1, int aux2)
+void trocarReqLugar(solucao &s, int aux1, int aux2)
 {
    int l1 = -1;
    int l2 = -1;
@@ -503,7 +495,7 @@ void mudar(solucao &s, int aux1, int aux2)
 
    if (l1 == -1 || l2 == -1 || l3 == -1 || l4 == -1 || c1 == -1 || c2 == -1 || c3 == -1 || c4 == -1 || l1 != l2 || l3 != l4)
    {
-      /*if (l1 == -1 || l2 == -1 || l3 == -1 || l4 == -1 || c1 == -1 || c2 == -1 || c3 == -1 || c4 == -1)
+      if (l1 == -1 || l2 == -1 || l3 == -1 || l4 == -1 || c1 == -1 || c2 == -1 || c3 == -1 || c4 == -1)
       {
          printf("Erro negativo");
          printf("\n%d  %d\n", aux1, aux2);
@@ -513,10 +505,9 @@ void mudar(solucao &s, int aux1, int aux2)
 
          printf("Erro de posição\n");
       }
-      escSolucao(s, "");
-      printf("erro\n");
-      */
-     printf("Erro");
+      // escSolucao(s, "");
+      return;
+      // printf("Erro");
    }
    else
    {
@@ -527,58 +518,257 @@ void mudar(solucao &s, int aux1, int aux2)
       aux = s.matAteVei[l2][c2];
       s.matAteVei[l2][c2] = s.matAteVei[l4][c4];
       s.matAteVei[l4][c4] = aux;
-
-      ordena(s.matAteVei[l1], vetFinJTLoc, s.vetQtdLocAte[l1]);
-      ordena(s.matAteVei[l3], vetFinJTLoc, s.vetQtdLocAte[l3]);
    }
 }
 
-void mover(solucao &s, int requisicao, int carro)
+void moverReqDeCar(solucao &s, int requisicao, int carro)
 {
+   if (requisicao == 0)
+   {
+      return;
+   }
+
    int i, j, k;
+   int posEmbarque;
+   int posDesembarque;
+
+   // caso venha algum local de desembarque
    if (requisicao > numReq)
    {
       requisicao -= numReq;
    }
 
+   int aju = 0;
+   int remEmbarque, remDesembarque;
+   remEmbarque = remDesembarque = 0;
+   // Removendo a requisicao do veiculo
    for (j = 0; j < s.numVeiUsa; j++)
    { // veiculos
       for (k = 0; k < s.vetQtdLocAte[j]; k++)
-      {// locais
-         if (s.matAteVei[j][k] == requisicao || s.matAteVei[j][k] == requisicao + numReq)
+      { // locais
+         if (s.matAteVei[j][k] == requisicao && remEmbarque == 0)
          {
-            if (j == carro)
+            for (i = k; i < s.vetQtdLocAte[j] - 1; i++)
             {
-               return;
+               s.matAteVei[j][i] = s.matAteVei[j][i + 1];
             }
-            else
+            s.matAteVei[j][i] = 0;
+            s.vetQtdLocAte[j] -= 1;
+            k--;
+            aju++;
+            remEmbarque = 1;
+         }
+
+         if (s.matAteVei[j][k] == requisicao && remDesembarque == 0)
+         {
+            for (i = k; i < s.vetQtdLocAte[j]; i++)
             {
-               for (i = k + 1; i <= s.vetQtdLocAte[j]; i++)
-               {
-                  s.matAteVei[j][i - 1] = s.matAteVei[j][i];
-               }
-               (s.vetQtdLocAte[j])--;
-               //k = k != 0 ? k - 1 : k;
-               k--;
+               s.matAteVei[j][i] = s.matAteVei[j][i + 1];
             }
+            s.matAteVei[j][i] = 0;
+            s.vetQtdLocAte[j] -= 1;
+            k--;
+            aju++;
+            remDesembarque = 1;
          }
       }
    }
+   if (aju != 2)
+   {
+      printf("Requisicao %d  %d\n", requisicao, aju);
+   }
 
-   s.matAteVei[carro][s.vetQtdLocAte[carro]] = requisicao;
-   s.vetQtdLocAte[carro] += 1;
-   s.matAteVei[carro][s.vetQtdLocAte[carro]] = requisicao + numReq;
-   s.vetQtdLocAte[carro] += 1;
+   // adicionando um local no carro que vai receber a requisição
+   /*
+      Como o primeiro sortei é para o embarque, o mesmo não pode entra na ultima possição
+      caso que aconteceria se adiciona-se as duas novas possições logo abaixo
+   */
+   s.vetQtdLocAte[carro]++;
 
-   // ordena(s.matAteVei[carro], p->inicioJanelaTempo, s.vetQtdLocAte[carro]);
+   // Sorteando a posicao de embarque
+   posEmbarque = rand() % (s.vetQtdLocAte[carro]); // 0 - (s.vetQtdLocAte[carro] - 1)
+
+   // adicionando outro local no carro que vai receber a requisição
+   s.vetQtdLocAte[carro]++;
+
+   posDesembarque = s.vetQtdLocAte[carro] - posEmbarque - 1;
+
+   if (posDesembarque == 0)
+   {
+      printf("Erro grave\n");
+      exit(1);
+   }
+
+   if (posDesembarque == 1)
+   {
+      posDesembarque = s.vetQtdLocAte[carro] - 1;
+   }
+   else
+   {
+      posDesembarque = posEmbarque + ((rand() % posDesembarque) + 1);
+   }
+
+   if (posEmbarque >= posDesembarque)
+   {
+      printf("possicao de embarque maior ou igual a possicao de desembarque\n");
+      exit(1);
+   }
+
+   // abrindo local para inserir o local de embarque
+   for (i = s.vetQtdLocAte[carro] - 1; i > posEmbarque; i--)
+   {
+      s.matAteVei[carro][i] = s.matAteVei[carro][i - 1];
+   }
+   // inserindo o local de embarque
+   s.matAteVei[carro][posEmbarque] = requisicao;
+
+   // abrindo local para inserir o local de desembarque
+   for (i = s.vetQtdLocAte[carro] - 1; i > posDesembarque; i--)
+   {
+      s.matAteVei[carro][i] = s.matAteVei[carro][i - 1];
+   }
+   // inserindo o local de desembarque
+   s.matAteVei[carro][posDesembarque] = requisicao + numReq;
 }
 
-void geraVizinhoAleatorio(solucao &s, int qtd)
+void geraVizinhoAleatorio(solucao &s)
 {
    int i, j, k;
    int aux1, aux2;
-   for (i = 0; i < qtd; i++)
+   do
    {
+      aux1 = rand() % numReq;
+   } while (aux1 <= 0);
+
+   do
+   {
+      aux2 = rand() % numReq;
+   } while (aux2 == aux1 || aux2 <= 0);
+
+   trocarReqLugar(s, aux1, aux2);
+}
+
+void gerarVizinhoMudandoDeCarro(solucao &s)
+{
+   int requisicao;
+   int carro;
+
+   requisicao = (rand() % numReq) + 1; // 1 -- nReq
+   carro = rand() % s.numVeiUsa;       // 0 -- (veiculos - 1)
+   // printf("%d     %d\n", requisicao, carro);
+   moverReqDeCar(s, requisicao, carro);
+}
+
+void gerarVizinho(solucao &s, int num)
+{
+   if (num)
+   {
+      int requisicao;
+      int carro;
+
+      requisicao = (rand() % numReq) + 1; // 1 -- nReq
+      carro = rand() % s.numVeiUsa;       // 0 -- (veiculos - 1)
+
+      int i, j, k;
+      int posEmbarque;
+      int posDesembarque;
+      // Removendo a requisicao do veiculo
+      /*
+         Deve ser usado o numvei ao inves do s.numveiusa, caso um carro qualquer não seja
+         usado a quantidade de v.numveiusa é decrecida em -1, mas se o carro que não está
+         usado não for o ultimo, gera um problema
+      */
+      for (i = 0; i < numVei; i++)
+      {
+         for (j = 0; j < s.vetQtdLocAte[i]; j++)
+         {
+            if (s.matAteVei[i][j] == requisicao)
+            {
+               // 1 2
+               for (k = j; k < s.vetQtdLocAte[i] - 1; k++)
+               {
+                  s.matAteVei[i][k] = s.matAteVei[i][k + 1];
+               }
+               s.matAteVei[i][k] = 0;
+               s.vetQtdLocAte[i]--;
+
+               for (j = 0; j < s.vetQtdLocAte[i]; j++)
+               {
+                  if (s.matAteVei[i][j] == requisicao + numReq)
+                  {
+                     for (k = j; k < s.vetQtdLocAte[i] - 1; k++)
+                     {
+                        s.matAteVei[i][k] = s.matAteVei[i][k + 1];
+                     }
+                     s.matAteVei[i][k] = 0;
+                     s.vetQtdLocAte[i]--;
+                     break;
+                  }
+                  if (j + 1 == s.vetQtdLocAte[i])
+                  {
+                     printf("Erro de exclusao\n");
+                  }
+               }
+            }
+         }
+      }
+
+      // adicionando um local no carro que vai receber a requisição
+      /*
+         Como o primeiro sortei é para o embarque, o mesmo não pode entra na ultima possição
+         caso que aconteceria se adiciona-se as duas novas possições logo abaixo
+      */
+      s.vetQtdLocAte[carro]++;
+
+      // Sorteando a posicao de embarque
+      posEmbarque = rand() % (s.vetQtdLocAte[carro]); // 0 - (s.vetQtdLocAte[carro] - 1)
+
+      // adicionando outro local no carro que vai receber a requisição
+      s.vetQtdLocAte[carro]++;
+
+      posDesembarque = s.vetQtdLocAte[carro] - posEmbarque - 1;
+
+      if (posDesembarque == 0)
+      {
+         printf("Erro grave\n");
+         exit(1);
+      }
+
+      if (posDesembarque == 1)
+      {
+         posDesembarque = s.vetQtdLocAte[carro] - 1;
+      }
+      else
+      {
+         posDesembarque = posEmbarque + ((rand() % posDesembarque) + 1);
+      }
+
+      if (posEmbarque >= posDesembarque)
+      {
+         printf("possicao de embarque maior ou igual a possicao de desembarque\n");
+         exit(1);
+      }
+
+      // abrindo local para inserir o local de embarque
+      for (i = s.vetQtdLocAte[carro] - 1; i > posEmbarque; i--)
+      {
+         s.matAteVei[carro][i] = s.matAteVei[carro][i - 1];
+      }
+      // inserindo o local de embarque
+      s.matAteVei[carro][posEmbarque] = requisicao;
+
+      // abrindo local para inserir o local de desembarque
+      for (i = s.vetQtdLocAte[carro] - 1; i > posDesembarque; i--)
+      {
+         s.matAteVei[carro][i] = s.matAteVei[carro][i - 1];
+      }
+      // inserindo o local de desembarque
+      s.matAteVei[carro][posDesembarque] = requisicao + numReq;
+   }
+   else
+   {
+      int i, j, k;
+      int aux1, aux2;
       do
       {
          aux1 = rand() % numReq;
@@ -589,78 +779,143 @@ void geraVizinhoAleatorio(solucao &s, int qtd)
          aux2 = rand() % numReq;
       } while (aux2 == aux1 || aux2 <= 0);
 
-      mudar(s, aux1, aux2);
-   }
-}
+      int l1 = -1;
+      int l2 = -1;
+      int l3 = -1;
+      int l4 = -1;
+      int c1 = -1;
+      int c2 = -1;
+      int c3 = -1;
+      int c4 = -1;
 
-void gerarVizinhoMudandoDeCarro(solucao &s, int qtd)
-{
-   int requisicao;
-   int carro;
-   for (int i = 0; i < qtd; i++)
-   {
-      requisicao = (rand() % numReq) + 1; // 1 -- nReq
-      carro = rand() % s.numVeiUsa;       // 0 -- (veiculos - 1)
-      printf("%d     %d\n", requisicao, carro);
-      mover(s, requisicao, carro);
-   }
-}
+      int aux;
 
-void simulatedAnnealing(double taxaResfriamento, int numeroDeInteracoes, double temperaturaInicial,
-                        double temperaturaFinal, solucao &s1)
-{
-
-   solucao Ms;
-   memcpy(&Ms, &s1, sizeof(solucao));
-   solucao s2;
-   int iterT = 0;
-   double temperatura = temperaturaInicial;
-   int variacao;
-   double x;
-
-   double E = 2.71828;
-
-   while (temperatura > temperaturaFinal)
-   {
-
-      while (iterT < numeroDeInteracoes)
+      if (aux1 > numReq)
       {
-         iterT++;
-         memcpy(&s2, &s1, sizeof(solucao));
-         if (iterT % 2 > 0)
-         {
-            geraVizinhoAleatorio(s2, 3);
-         }
-         else
-         {
-            gerarVizinhoMudandoDeCarro(s2, 3);
-         }
+         aux1 -= numReq;
+      }
 
-         calcFO(s2);
-         variacao = s2.funObj - s1.funObj;
-         if (variacao <= 0)
-         {
-            fflush(stdin);
-            memcpy(&s1, &s2, sizeof(solucao));
-            if (s2.funObj < Ms.funObj)
+      if (aux2 > numReq)
+      {
+         aux2 -= numReq;
+      }
+
+      /*
+         Deve ser usado o numvei ao inves do s.numveiusa, caso um carro qualquer não seja
+         usado a quantidade de v.numveiusa é decrecida em -1, mas se o carro que não está
+         usado não for o ultimo, gera um problema
+      */
+      for (int j = 0; j < numVei; j++)
+      { // veiculos
+         for (int k = 0; k <= s.vetQtdLocAte[j]; k++)
+         { // locais
+            if (s.matAteVei[j][k] == aux1)
             {
-               memcpy(&Ms, &s2, sizeof(solucao));
+               l1 = j;
+               c1 = k;
             }
-         }
-         else
-         {
-            fflush(stdin);
-            x = (rand() % 1000) + 1;
-            x /= 1000;
-            if (x < pow(E, -(variacao / temperatura)))
+            if (s.matAteVei[j][k] == (aux1 + numReq))
             {
-               memcpy(&s1, &s2, sizeof(solucao));
+               l2 = j;
+               c2 = k;
+            }
+            if (s.matAteVei[j][k] == aux2)
+            {
+               l3 = j;
+               c3 = k;
+            }
+            if (s.matAteVei[j][k] == (aux2 + numReq))
+            {
+               l4 = j;
+               c4 = k;
             }
          }
       }
-      temperatura *= taxaResfriamento;
-      iterT = 0;
-   }
 
-   memcpy(&s1, &Ms, sizeof(solucao));
+      if (l1 == -1 || l2 == -1 || l3 == -1 || l4 == -1 || c1 == -1 || c2 == -1 || c3 == -1 || c4 == -1 || l1 != l2 || l3 != l4)
+      {
+         /*if (l1 == -1 || l2 == -1 || l3 == -1 || l4 == -1 || c1 == -1 || c2 == -1 || c3 == -1 || c4 == -1)
+         {
+            printf("Erro negativo");
+            printf("\n%d  %d\n", aux1, aux2);
+         }
+         else
+         {
+            printf("Erro de posição\n");
+         }
+         escSolucao(s, "");
+         system("pause");*/
+         printf("Erro");
+      }
+      else
+      {
+         aux = s.matAteVei[l1][c1];
+         s.matAteVei[l1][c1] = s.matAteVei[l3][c3];
+         s.matAteVei[l3][c3] = aux;
+
+         aux = s.matAteVei[l2][c2];
+         s.matAteVei[l2][c2] = s.matAteVei[l4][c4];
+         s.matAteVei[l4][c4] = aux;
+      }
+   }
+}
+
+void simulated_annealing(const double alfa, const int sa_max, const double temp_ini, const double temp_con,
+                         const double tempo_max, solucao &s, double &tempo_melhor, double &tempo_total)
+{
+   clock_t hI, hF;
+   solucao s_atual, s_vizinha;
+   double temp, delta, x;
+   printf("\n\n>>> EXECUTANDO O SA...\n\n");
+   hI = clock();
+   heuConGul(s);
+   calcFO(s);
+   hF = clock();
+   tempo_melhor = ((double)(hF - hI)) / CLOCKS_PER_SEC;
+#ifdef DBG
+   printf("FO: %d\tTempo: %.2f\n", s.funObj, tempo_melhor);
+#endif // DBG
+   tempo_total = tempo_melhor;
+   memcpy(&s_atual, &s, sizeof(s));
+   while (tempo_total < tempo_max)
+   {
+      temp = temp_ini;
+      while (temp > temp_con)
+      {
+         for (int i = 0; i < sa_max; i++)
+         {
+            memcpy(&s_vizinha, &s_atual, sizeof(s_atual));
+            gerarVizinho(s_vizinha, i % 2);
+            calcFO(s_vizinha);
+            delta = s_vizinha.funObj - s_atual.funObj;
+            if (delta < 0)
+            {
+               memcpy(&s_atual, &s_vizinha, sizeof(s_vizinha));
+               if (s_vizinha.funObj < s.funObj)
+               {
+                  memcpy(&s, &s_vizinha, sizeof(s_vizinha));
+                  hF = clock();
+                  tempo_melhor = ((double)(hF - hI)) / CLOCKS_PER_SEC;
+#ifdef DBG
+                  printf("FO: %d\tTempo: %.2f\n", s.funObj, tempo_melhor);
+#endif // DBG
+               }
+            }
+            else
+            {
+               x = rand() % 1001;
+               x = x / 1000.0;
+               if (x < exp(-delta / temp))
+               {
+                  memcpy(&s_atual, &s_vizinha, sizeof(s_vizinha));
+               }
+            }
+         }
+         temp = temp * alfa;
+         hF = clock();
+         tempo_total = ((double)(hF - hI)) / CLOCKS_PER_SEC;
+         if (tempo_total >= tempo_max)
+            break;
+      }
+   }
 }

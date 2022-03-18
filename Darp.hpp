@@ -91,13 +91,10 @@ void ordenarLocais();
 void testarDados(std::string arq);
 void lerDados(std::string arq);
 
-void geraVizinhoAleatorio(solucao &s, int qtd);
-
-void geraVizinhoComAdicaoCarro(solucao &s, int qtd);
-
-void gerarVizinhoMudandoDeCarro(solucao &s, int qtd);
-
-void simulatedAnnealing(double taxaResfriamento, int numeroDeInteracoes, double temperaturaInicial, double temperaturaFinal, solucao &s1);
+void geraVizinhoAleatorio(solucao &s);
+void gerarVizinhoMudandoDeCarro(solucao &s);
+void simulated_annealing(const double alfa, const int sa_max, const double temp_ini, const double temp_con,
+                         const double tempo_max, solucao &s, double &tempo_melhor, double &tempo_total);
 
 
 #ifdef __cplusplus
