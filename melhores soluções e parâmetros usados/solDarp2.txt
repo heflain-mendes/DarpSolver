@@ -1,0 +1,298 @@
+468	3
+0	8	8  38  14  16  13  44  46  43  18  23  48  21  51  53  30  60  
+1	11	1  31  2  6  3  32  33  10  36  11  9  40  39  19  41  49  24  26  54  27  56  57  
+2	11	4  5  34  7  37  12  35  42  15  17  47  45  20  25  50  22  55  52  28  29  59  58  
+
+
+< ---------------------- DARP ----------------------- >
+
+Numero de veiculos disponiveis.................: 6
+Numero de requisicoes (PPNEs)..................: 30
+Numero de localidades..........................: 62
+Duracao maxima de uma rota.....................: 560 minutos!
+Tempo maximo de viagem.........................: 1440 minutos!
+Tempo maximo de espera.........................: 1440 minutos!
+
+Peso para o numero de veiculos utilizados......: 10
+Peso para a distancia total percorrida.........: 1
+Peso para a duracao da rota....................: 0
+Peso para o tempo total de viagem..............: 0
+Peso para o tempo total de espera..............: 0
+
+Peso para violacoes na capacidade dos veiculos.: 1000
+Peso para violacoes na duracao das rotas.......: 100
+Peso para violacoes nas janelas de tempo.......: 100
+Peso para violacoes no tempo de viagem.........: 100
+Peso para violacoes no tempo de espera.........: 100
+
+
+< --------------------- SOLUCAO --------------------- >
+
+Numero de veiculos utilizados..................: 3
+Distancia total percorrida.....................: 438
+Duracao total das rotas........................: 1355 minutos!
+Tempo total de viagem..........................: 1282 minutos!
+Tempo total de espera..........................: 713 minutos!
+Violacoes nas capacidades dos veiculos.........: 0 (un)
+Violacoes na duracao das rotas.................: 0 minutos!
+Violacoes nas janelas de tempo.................: 0 minutos!
+Violacoes no tempo maximo de viagem............: 0 minutos!
+Violacoes no tempo maximo de espera............: 0 minutos!
+Custo total da solucao (FO)....................: 468
+
+
+VEICULOS:
+
+>>> Veiculo 1:
+Numero de PPNEs atendidas............: 8
+Distancia percorrida.................: 118
+Duracao da rota......................: 394
+Violacoes na capacidade do veiculo...: 0 (un)
+Violacoes na duracao da rota.........: 0 minutos!
+Sequencia de locais...: 0 --> 8 --> 38 --> 14 --> 16 --> 13 --> 44 --> 46 --> 43 --> 18 --> 23 --> 48 --> 21 --> 51 --> 53 --> 30 --> 60 --> 61
+
+>>> Veiculo 2:
+Numero de PPNEs atendidas............: 11
+Distancia percorrida.................: 134
+Duracao da rota......................: 461
+Violacoes na capacidade do veiculo...: 0 (un)
+Violacoes na duracao da rota.........: 0 minutos!
+Sequencia de locais...: 0 --> 1 --> 31 --> 2 --> 6 --> 3 --> 32 --> 33 --> 10 --> 36 --> 11 --> 9 --> 40 --> 39 --> 19 --> 41 --> 49 --> 24 --> 26 --> 54 --> 27 --> 56 --> 57 --> 61
+
+>>> Veiculo 3:
+Numero de PPNEs atendidas............: 11
+Distancia percorrida.................: 186
+Duracao da rota......................: 500
+Violacoes na capacidade do veiculo...: 0 (un)
+Violacoes na duracao da rota.........: 0 minutos!
+Sequencia de locais...: 0 --> 4 --> 5 --> 34 --> 7 --> 37 --> 12 --> 35 --> 42 --> 15 --> 17 --> 47 --> 45 --> 20 --> 25 --> 50 --> 22 --> 55 --> 52 --> 28 --> 29 --> 59 --> 58 --> 61
+
+>>> Veiculo 4:
+Numero de PPNEs atendidas............: 0
+Distancia percorrida.................: 0
+Duracao da rota......................: 0
+Violacoes na capacidade do veiculo...: 0 (un)
+Violacoes na duracao da rota.........: 0 minutos!
+Sequencia de locais...: 0 --> 61
+
+>>> Veiculo 5:
+Numero de PPNEs atendidas............: 0
+Distancia percorrida.................: 0
+Duracao da rota......................: 0
+Violacoes na capacidade do veiculo...: 0 (un)
+Violacoes na duracao da rota.........: 0 minutos!
+Sequencia de locais...: 0 --> 61
+
+>>> Veiculo 6:
+Numero de PPNEs atendidas............: 0
+Distancia percorrida.................: 0
+Duracao da rota......................: 0
+Violacoes na capacidade do veiculo...: 0 (un)
+Violacoes na duracao da rota.........: 0 minutos!
+Sequencia de locais...: 0 --> 61
+
+
+REQUISICOES (PPNEs):
+
+>>> Requisicao 1:
+Tempo de viagem...: 28
+Tempo de espera...: 23
+
+>>> Requisicao 2:
+Tempo de viagem...: 34
+Tempo de espera...: 0
+
+>>> Requisicao 3:
+Tempo de viagem...: 10
+Tempo de espera...: 0
+
+>>> Requisicao 4:
+Tempo de viagem...: 37
+Tempo de espera...: 23
+
+>>> Requisicao 5:
+Tempo de viagem...: 97
+Tempo de espera...: 34
+
+>>> Requisicao 6:
+Tempo de viagem...: 67
+Tempo de espera...: 28
+
+>>> Requisicao 7:
+Tempo de viagem...: 26
+Tempo de espera...: 17
+
+>>> Requisicao 8:
+Tempo de viagem...: 47
+Tempo de espera...: 39
+
+>>> Requisicao 9:
+Tempo de viagem...: 21
+Tempo de espera...: 13
+
+>>> Requisicao 10:
+Tempo de viagem...: 37
+Tempo de espera...: 13
+
+>>> Requisicao 11:
+Tempo de viagem...: 93
+Tempo de espera...: 67
+
+>>> Requisicao 12:
+Tempo de viagem...: 37
+Tempo de espera...: 15
+
+>>> Requisicao 13:
+Tempo de viagem...: 38
+Tempo de espera...: 25
+
+>>> Requisicao 14:
+Tempo de viagem...: 31
+Tempo de espera...: 11
+
+>>> Requisicao 15:
+Tempo de viagem...: 58
+Tempo de espera...: 24
+
+>>> Requisicao 16:
+Tempo de viagem...: 37
+Tempo de espera...: 25
+
+>>> Requisicao 17:
+Tempo de viagem...: 33
+Tempo de espera...: 24
+
+>>> Requisicao 18:
+Tempo de viagem...: 47
+Tempo de espera...: 36
+
+>>> Requisicao 19:
+Tempo de viagem...: 37
+Tempo de espera...: 28
+
+>>> Requisicao 20:
+Tempo de viagem...: 56
+Tempo de espera...: 45
+
+>>> Requisicao 21:
+Tempo de viagem...: 10
+Tempo de espera...: 0
+
+>>> Requisicao 22:
+Tempo de viagem...: 21
+Tempo de espera...: 12
+
+>>> Requisicao 23:
+Tempo de viagem...: 37
+Tempo de espera...: 0
+
+>>> Requisicao 24:
+Tempo de viagem...: 37
+Tempo de espera...: 20
+
+>>> Requisicao 25:
+Tempo de viagem...: 37
+Tempo de espera...: 12
+
+>>> Requisicao 26:
+Tempo de viagem...: 84
+Tempo de espera...: 63
+
+>>> Requisicao 27:
+Tempo de viagem...: 37
+Tempo de espera...: 26
+
+>>> Requisicao 28:
+Tempo de viagem...: 74
+Tempo de espera...: 34
+
+>>> Requisicao 29:
+Tempo de viagem...: 37
+Tempo de espera...: 28
+
+>>> Requisicao 30:
+Tempo de viagem...: 37
+Tempo de espera...: 28
+
+
+PROGRAMACAO DETALHADA:
+
+Legenda:
+   HC: Horario de chegada (min)
+   TE: Tempo de espera    (min)
+   IA: Inicio do atend.   (min)
+   HS: Horario de saida   (min)
+   TV: Tempo de viagem    (min)
+   CV: Carga do veiculo   (un)
+
+Veiculo 1
+Loc: 0	HC: -	TE: -	IA: 469	HS: 469	TV: -	CV: 0
+Loc: 8	HC: 485	TE: 0	IA: 485	HS: 488	TV: -	CV: 1
+Loc: 38	HC: 496	TE: 39	IA: 535	HS: 538	TV: 47	CV: 0
+Loc: 14	HC: 547	TE: 0	IA: 547	HS: 550	TV: -	CV: 1
+Loc: 16	HC: 559	TE: 11	IA: 570	HS: 573	TV: -	CV: 2
+Loc: 13	HC: 577	TE: 0	IA: 577	HS: 580	TV: -	CV: 3
+Loc: 44	HC: 581	TE: 0	IA: 581	HS: 584	TV: 31	CV: 2
+Loc: 46	HC: 585	TE: 25	IA: 610	HS: 613	TV: 37	CV: 1
+Loc: 43	HC: 618	TE: 0	IA: 618	HS: 621	TV: 38	CV: 0
+Loc: 18	HC: 626	TE: 0	IA: 626	HS: 629	TV: -	CV: 1
+Loc: 23	HC: 634	TE: 36	IA: 670	HS: 673	TV: -	CV: 2
+Loc: 48	HC: 676	TE: 0	IA: 676	HS: 679	TV: 47	CV: 1
+Loc: 21	HC: 683	TE: 0	IA: 683	HS: 686	TV: -	CV: 2
+Loc: 51	HC: 696	TE: 0	IA: 696	HS: 699	TV: 10	CV: 1
+Loc: 53	HC: 710	TE: 0	IA: 710	HS: 713	TV: 37	CV: 0
+Loc: 30	HC: 721	TE: 89	IA: 810	HS: 813	TV: -	CV: 1
+Loc: 60	HC: 822	TE: 28	IA: 850	HS: 853	TV: 37	CV: 0
+Loc: 61	HC: 863	TE: -	IA: -	HS: -	TV: -	CV: 0
+
+Veiculo 2
+Loc: 0	HC: -	TE: -	IA: 360	HS: 360	TV: -	CV: 0
+Loc: 1	HC: 374	TE: 0	IA: 374	HS: 377	TV: -	CV: 1
+Loc: 31	HC: 382	TE: 23	IA: 405	HS: 408	TV: 28	CV: 0
+Loc: 2	HC: 413	TE: 0	IA: 413	HS: 416	TV: -	CV: 1
+Loc: 6	HC: 433	TE: 0	IA: 433	HS: 436	TV: -	CV: 2
+Loc: 3	HC: 442	TE: 0	IA: 442	HS: 445	TV: -	CV: 3
+Loc: 32	HC: 450	TE: 0	IA: 450	HS: 453	TV: 34	CV: 2
+Loc: 33	HC: 455	TE: 0	IA: 455	HS: 458	TV: 10	CV: 1
+Loc: 10	HC: 467	TE: 28	IA: 495	HS: 498	TV: -	CV: 2
+Loc: 36	HC: 503	TE: 0	IA: 503	HS: 506	TV: 67	CV: 1
+Loc: 11	HC: 511	TE: 0	IA: 511	HS: 514	TV: -	CV: 2
+Loc: 9	HC: 518	TE: 0	IA: 518	HS: 521	TV: -	CV: 3
+Loc: 40	HC: 522	TE: 13	IA: 535	HS: 538	TV: 37	CV: 2
+Loc: 39	HC: 542	TE: 0	IA: 542	HS: 545	TV: 21	CV: 1
+Loc: 19	HC: 546	TE: 54	IA: 600	HS: 603	TV: -	CV: 2
+Loc: 41	HC: 607	TE: 0	IA: 607	HS: 610	TV: 93	CV: 1
+Loc: 49	HC: 612	TE: 28	IA: 640	HS: 643	TV: 37	CV: 0
+Loc: 24	HC: 654	TE: 26	IA: 680	HS: 683	TV: -	CV: 1
+Loc: 26	HC: 690	TE: 0	IA: 690	HS: 693	TV: -	CV: 2
+Loc: 54	HC: 700	TE: 20	IA: 720	HS: 723	TV: 37	CV: 1
+Loc: 27	HC: 727	TE: 43	IA: 770	HS: 773	TV: -	CV: 2
+Loc: 56	HC: 777	TE: 0	IA: 777	HS: 780	TV: 84	CV: 1
+Loc: 57	HC: 784	TE: 26	IA: 810	HS: 813	TV: 37	CV: 0
+Loc: 61	HC: 821	TE: -	IA: -	HS: -	TV: -	CV: 0
+
+Veiculo 3
+Loc: 0	HC: -	TE: -	IA: 393	HS: 393	TV: -	CV: 0
+Loc: 4	HC: 405	TE: 0	IA: 405	HS: 408	TV: -	CV: 1
+Loc: 5	HC: 412	TE: 18	IA: 430	HS: 433	TV: -	CV: 2
+Loc: 34	HC: 440	TE: 5	IA: 445	HS: 448	TV: 37	CV: 1
+Loc: 7	HC: 461	TE: 0	IA: 461	HS: 464	TV: -	CV: 2
+Loc: 37	HC: 473	TE: 17	IA: 490	HS: 493	TV: 26	CV: 1
+Loc: 12	HC: 498	TE: 12	IA: 510	HS: 513	TV: -	CV: 2
+Loc: 35	HC: 530	TE: 0	IA: 530	HS: 533	TV: 97	CV: 1
+Loc: 42	HC: 535	TE: 15	IA: 550	HS: 553	TV: 37	CV: 0
+Loc: 15	HC: 562	TE: 0	IA: 562	HS: 565	TV: -	CV: 1
+Loc: 17	HC: 574	TE: 0	IA: 574	HS: 577	TV: -	CV: 2
+Loc: 47	HC: 586	TE: 24	IA: 610	HS: 613	TV: 33	CV: 1
+Loc: 45	HC: 623	TE: 0	IA: 623	HS: 626	TV: 58	CV: 0
+Loc: 20	HC: 628	TE: 2	IA: 630	HS: 633	TV: -	CV: 1
+Loc: 25	HC: 635	TE: 45	IA: 680	HS: 683	TV: -	CV: 2
+Loc: 50	HC: 689	TE: 0	IA: 689	HS: 692	TV: 56	CV: 1
+Loc: 22	HC: 704	TE: 0	IA: 704	HS: 707	TV: -	CV: 2
+Loc: 55	HC: 708	TE: 12	IA: 720	HS: 723	TV: 37	CV: 1
+Loc: 52	HC: 728	TE: 0	IA: 728	HS: 731	TV: 21	CV: 0
+Loc: 28	HC: 736	TE: 64	IA: 800	HS: 803	TV: -	CV: 1
+Loc: 29	HC: 804	TE: 6	IA: 810	HS: 813	TV: -	CV: 2
+Loc: 59	HC: 822	TE: 28	IA: 850	HS: 853	TV: 37	CV: 1
+Loc: 58	HC: 877	TE: 0	IA: 877	HS: 880	TV: 74	CV: 0
+Loc: 61	HC: 893	TE: -	IA: -	HS: -	TV: -	CV: 0

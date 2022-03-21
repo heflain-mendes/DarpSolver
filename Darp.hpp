@@ -91,14 +91,13 @@ void ordenarLocais();
 void testarDados(std::string arq);
 void lerDados(std::string arq);
 
-void geraVizinhoAleatorio(solucao &s);
-void gerarVizinhoMudandoDeCarro(solucao &s);
+void gerarVizinho(solucao &s, int num);
 void simulated_annealing(const double alfa, const int sa_max, const double temp_ini, const double temp_con,
                          const double tempo_max, solucao &s, double &tempo_melhor, double &tempo_total);
 
 
 #ifdef __cplusplus
-//}
+
 #endif
 
 #endif /* DARP_HPP */
